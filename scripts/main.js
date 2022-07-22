@@ -20,8 +20,13 @@ for (let suit of suits) {
 
 const dealButton = document.querySelector('#deal-button');
 const hitMeButton = document.querySelector('#hit-button');
+const standButton = document.querySelector('#stand-button');
+const resetButton = document.querySelector('#reset-button');
 let dealerScore = [];
 let playerScore = [];
+const dealerScoreCount = document.querySelector('#dealer-points');
+const playerScoreCount = document.querySelector('#player-points');
+const messageBox = document.querySelector('#messages');
 
 //event listeners
 window.addEventListener("DOMContentLoaded", () => {
@@ -29,7 +34,8 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 dealButton.addEventListener('click', deal);
 hitMeButton.addEventListener('click', hitMe);
-
+standButton.addEventListener('click', stand);
+resetButton.addEventListener('click', reset);
 
 //functions
 function shuffleDeck(array) {
@@ -58,16 +64,23 @@ function deal (event) {
     playerHand.appendChild(playerCard);
     counter --;
   }
+  let dealerScoreValue = score(dealerScore);
+  dealerScoreCount.innerHTML = dealerScoreValue;
+  let playerScoreValue = score(playerScore);
+  playerScoreCount.innerHTML = playerScoreValue;
 }
 
 function hitMe (event) {
   if(event.target.id === 'hit-button'){
-    const dealerCard = document.createElement('img'); 
-    const dealerCardInfo = deck.pop();
-    const dealerPoints = dealerCardInfo.pointValue;
-    dealerScore.push(dealerPoints);
-    dealerCard.setAttribute('src', `./images/${dealerCardInfo.rank}_of_${dealerCardInfo.suit}.png`);
-    dealerHand.appendChild(dealerCard);
+    shuffleDeck(deck);
+    if (dealerScoreCount.innerHTML <= 16){
+      const dealerCard = document.createElement('img'); 
+      const dealerCardInfo = deck.pop();
+      const dealerPoints = dealerCardInfo.pointValue;
+      dealerScore.push(dealerPoints);
+      dealerCard.setAttribute('src', `./images/${dealerCardInfo.rank}_of_${dealerCardInfo.suit}.png`);
+      dealerHand.appendChild(dealerCard);
+    }
     const playerCard = document.createElement('img'); 
     const playerCardInfo = deck.pop();
     const playerPoints = playerCardInfo.pointValue;
@@ -75,7 +88,60 @@ function hitMe (event) {
     playerCard.setAttribute('src', `./images/${playerCardInfo.rank}_of_${playerCardInfo.suit}.png`);
     playerHand.appendChild(playerCard);
   }
+  let dealerScoreValue = score(dealerScore);
+  dealerScoreCount.innerHTML = dealerScoreValue;
+  let playerScoreValue = score(playerScore);
+  playerScoreCount.innerHTML = playerScoreValue;
+  if (dealerScoreValue > 21){
+      messageBox.innerText = 'Dealer Bust! You win!'
+  } else if(playerScoreValue > 21){
+      messageBox.innerText = 'Busted! Try again!'
+  } else {
+      messageBox.innerText = "Who's next?";
+  }
+}
+
+function stand (event){
+  if (event.target.id === 'stand-button'){
+    shuffleDeck(deck);
+    while (dealerScoreCount.innerHTML < 17){
+      const dealerCard = document.createElement('img'); 
+      const dealerCardInfo = deck.pop();
+      const dealerPoints = dealerCardInfo.pointValue;
+      dealerScore.push(dealerPoints);
+      dealerCard.setAttribute('src', `./images/${dealerCardInfo.rank}_of_${dealerCardInfo.suit}.png`);
+      dealerHand.appendChild(dealerCard);
+      let dealerScoreValue = score(dealerScore);
+      dealerScoreCount.innerHTML = dealerScoreValue;
+      if (dealerScoreCount.innerHTML > 21){
+        messageBox.innerText = 'Dealer Bust! You win!'
+      } else if(dealerScoreCount.innerHTML == 21){
+          messageBox.innerText = 'The House wins!'
+      } else if ( playerScoreCount.innerHTML < dealerScoreCount.innerHTML) {
+          messageBox.innerText = 'The House wins!'
+      } else {
+          messageBox.innerText = 'Winner winner, chicken dinner!'
+      }
+    }
+  }  
+}
+
+function reset (event){
+  if (event.target.id === 'reset-button'){
+    messageBox.innerText = '';
+    playerScoreCount.innerHTML = '';
+    dealerScoreCount.innerHTML = '';
+    dealerHand.innerHTML = '';
+    playerHand.innerHTML = '';
+  }
 }
 
 
-// let cardInfo = deck[Math.floor(Math.random()) * deck.length]
+function score (array){
+  let sum = 0;
+  for (i=0; i < array.length; i++){
+    sum += array[i];
+  }
+ return sum;
+}
+
