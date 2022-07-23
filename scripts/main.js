@@ -1,5 +1,8 @@
+//HAND
 const dealerHand = document.getElementById("dealer-hand");
 const playerHand = document.getElementById("player-hand");
+
+//DECK
 const deck = [];
 const suits = ["hearts", "spades", "clubs", "diamonds"];
 const ranks = ["ace", 2, 3, 4, 5, 6, 7, 8, 9, 10, "jack", "queen", "king"];
@@ -18,26 +21,26 @@ for (let suit of suits) {
   }
 }
 
+//BUTTONS
 const dealButton = document.querySelector('#deal-button');
 const hitMeButton = document.querySelector('#hit-button');
 const standButton = document.querySelector('#stand-button');
 const resetButton = document.querySelector('#reset-button');
+
+//SCOREBOARD
 let dealerScore = [];
 let playerScore = [];
 const dealerScoreCount = document.querySelector('#dealer-points');
 const playerScoreCount = document.querySelector('#player-points');
 const messageBox = document.querySelector('#messages');
 
-//event listeners
-window.addEventListener("DOMContentLoaded", () => {
-  // Execute after page load
-});
+//EVENT LISTENERS
 dealButton.addEventListener('click', deal);
 hitMeButton.addEventListener('click', hitMe);
 standButton.addEventListener('click', stand);
 resetButton.addEventListener('click', reset);
 
-//functions
+//FUNCTIONS
 function shuffleDeck(array) {
   for (let i = array.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -73,20 +76,22 @@ function deal (event) {
 function hitMe (event) {
   if(event.target.id === 'hit-button'){
     shuffleDeck(deck);
-    if (dealerScoreCount.innerHTML <= 16){
-      const dealerCard = document.createElement('img'); 
-      const dealerCardInfo = deck.pop();
-      const dealerPoints = dealerCardInfo.pointValue;
-      dealerScore.push(dealerPoints);
-      dealerCard.setAttribute('src', `./images/${dealerCardInfo.rank}_of_${dealerCardInfo.suit}.png`);
-      dealerHand.appendChild(dealerCard);
-    }
     const playerCard = document.createElement('img'); 
     const playerCardInfo = deck.pop();
     const playerPoints = playerCardInfo.pointValue;
     playerScore.push(playerPoints);
     playerCard.setAttribute('src', `./images/${playerCardInfo.rank}_of_${playerCardInfo.suit}.png`);
     playerHand.appendChild(playerCard);
+    // if (playerScoreValue > 21) {
+    //   messageBox.innerText('Busted! Try again!')
+      if (dealerScoreCount.innerHTML <= 16){
+        const dealerCard = document.createElement('img'); 
+        const dealerCardInfo = deck.pop();
+        const dealerPoints = dealerCardInfo.pointValue;
+        dealerScore.push(dealerPoints);
+        dealerCard.setAttribute('src', `./images/${dealerCardInfo.rank}_of_${dealerCardInfo.suit}.png`);
+        dealerHand.appendChild(dealerCard);
+      }
   }
   let dealerScoreValue = score(dealerScore);
   dealerScoreCount.innerHTML = dealerScoreValue;
@@ -126,16 +131,34 @@ function stand (event){
   }  
 }
 
+
 function reset (event){
   if (event.target.id === 'reset-button'){
     messageBox.innerText = '';
-    playerScoreCount.innerHTML = '';
-    dealerScoreCount.innerHTML = '';
+    dealerScore = [];
+    playerScore = [];
     dealerHand.innerHTML = '';
     playerHand.innerHTML = '';
   }
 }
 
+// function dealToDealer (){
+//   const dealerCard = document.createElement('img'); 
+//   const dealerCardInfo = deck.pop();
+//   const dealerPoints = dealerCardInfo.pointValue;
+//   dealerScore.push(dealerPoints);
+//   dealerCard.setAttribute('src', `./images/${dealerCardInfo.rank}_of_${dealerCardInfo.suit}.png`);
+//   dealerHand.appendChild(dealerCard);
+// }
+
+// function dealToPlayer (){
+//   const playerCard = document.createElement('img'); 
+//     const playerCardInfo = deck.pop();
+//     const playerPoints = playerCardInfo.pointValue;
+//     playerScore.push(playerPoints);
+//     playerCard.setAttribute('src', `./images/${playerCardInfo.rank}_of_${playerCardInfo.suit}.png`);
+//     playerHand.appendChild(playerCard);
+// }
 
 function score (array){
   let sum = 0;
@@ -145,3 +168,6 @@ function score (array){
  return sum;
 }
 
+window.addEventListener("DOMContentLoaded", () => {
+  // Execute after page load
+});
