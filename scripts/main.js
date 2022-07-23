@@ -53,44 +53,21 @@ function deal (event) {
   while(counter > 0)
   if(event.target.id === 'deal-button'){
     shuffleDeck(deck);
-    const dealerCard = document.createElement('img'); 
-    const dealerCardInfo = deck.pop();
-    const dealerPoints = dealerCardInfo.pointValue;
-    dealerScore.push(dealerPoints);
-    dealerCard.setAttribute('src', `./images/${dealerCardInfo.rank}_of_${dealerCardInfo.suit}.png`);
-    dealerHand.appendChild(dealerCard);
-    const playerCard = document.createElement('img'); 
-    const playerCardInfo = deck.pop();
-    const playerPoints = playerCardInfo.pointValue;
-    playerScore.push(playerPoints);
-    playerCard.setAttribute('src', `./images/${playerCardInfo.rank}_of_${playerCardInfo.suit}.png`);
-    playerHand.appendChild(playerCard);
+    dealToDealer();
+    dealToPlayer();
     counter --;
   }
-  let dealerScoreValue = score(dealerScore);
-  dealerScoreCount.innerHTML = dealerScoreValue;
-  let playerScoreValue = score(playerScore);
-  playerScoreCount.innerHTML = playerScoreValue;
+  displayScore();
 }
 
 function hitMe (event) {
   if(event.target.id === 'hit-button'){
     shuffleDeck(deck);
-    const playerCard = document.createElement('img'); 
-    const playerCardInfo = deck.pop();
-    const playerPoints = playerCardInfo.pointValue;
-    playerScore.push(playerPoints);
-    playerCard.setAttribute('src', `./images/${playerCardInfo.rank}_of_${playerCardInfo.suit}.png`);
-    playerHand.appendChild(playerCard);
+    dealToPlayer();
     // if (playerScoreValue > 21) {
     //   messageBox.innerText('Busted! Try again!')
       if (dealerScoreCount.innerHTML <= 16){
-        const dealerCard = document.createElement('img'); 
-        const dealerCardInfo = deck.pop();
-        const dealerPoints = dealerCardInfo.pointValue;
-        dealerScore.push(dealerPoints);
-        dealerCard.setAttribute('src', `./images/${dealerCardInfo.rank}_of_${dealerCardInfo.suit}.png`);
-        dealerHand.appendChild(dealerCard);
+        dealToDealer();
       }
   }
   let dealerScoreValue = score(dealerScore);
@@ -110,12 +87,7 @@ function stand (event){
   if (event.target.id === 'stand-button'){
     shuffleDeck(deck);
     while (dealerScoreCount.innerHTML < 17){
-      const dealerCard = document.createElement('img'); 
-      const dealerCardInfo = deck.pop();
-      const dealerPoints = dealerCardInfo.pointValue;
-      dealerScore.push(dealerPoints);
-      dealerCard.setAttribute('src', `./images/${dealerCardInfo.rank}_of_${dealerCardInfo.suit}.png`);
-      dealerHand.appendChild(dealerCard);
+      dealToDealer();
       let dealerScoreValue = score(dealerScore);
       dealerScoreCount.innerHTML = dealerScoreValue;
       if (dealerScoreCount.innerHTML > 21){
@@ -131,6 +103,12 @@ function stand (event){
   }  
 }
 
+function displayScore (){
+  let dealerScoreValue = score(dealerScore);
+  dealerScoreCount.innerHTML = dealerScoreValue;
+  let playerScoreValue = score(playerScore);
+  playerScoreCount.innerHTML = playerScoreValue;
+}
 
 function reset (event){
   if (event.target.id === 'reset-button'){
@@ -142,23 +120,23 @@ function reset (event){
   }
 }
 
-// function dealToDealer (){
-//   const dealerCard = document.createElement('img'); 
-//   const dealerCardInfo = deck.pop();
-//   const dealerPoints = dealerCardInfo.pointValue;
-//   dealerScore.push(dealerPoints);
-//   dealerCard.setAttribute('src', `./images/${dealerCardInfo.rank}_of_${dealerCardInfo.suit}.png`);
-//   dealerHand.appendChild(dealerCard);
-// }
+function dealToDealer (){
+  const dealerCard = document.createElement('img'); 
+  const dealerCardInfo = deck.pop();
+  const dealerPoints = dealerCardInfo.pointValue;
+  dealerScore.push(dealerPoints);
+  dealerCard.setAttribute('src', `./images/${dealerCardInfo.rank}_of_${dealerCardInfo.suit}.png`);
+  dealerHand.appendChild(dealerCard);
+}
 
-// function dealToPlayer (){
-//   const playerCard = document.createElement('img'); 
-//     const playerCardInfo = deck.pop();
-//     const playerPoints = playerCardInfo.pointValue;
-//     playerScore.push(playerPoints);
-//     playerCard.setAttribute('src', `./images/${playerCardInfo.rank}_of_${playerCardInfo.suit}.png`);
-//     playerHand.appendChild(playerCard);
-// }
+function dealToPlayer (){
+  const playerCard = document.createElement('img'); 
+    const playerCardInfo = deck.pop();
+    const playerPoints = playerCardInfo.pointValue;
+    playerScore.push(playerPoints);
+    playerCard.setAttribute('src', `./images/${playerCardInfo.rank}_of_${playerCardInfo.suit}.png`);
+    playerHand.appendChild(playerCard);
+}
 
 function score (array){
   let sum = 0;
