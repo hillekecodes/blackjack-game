@@ -58,29 +58,21 @@ function deal (event) {
     counter --;
   }
   displayScore();
+  checkScore();
 }
 
 function hitMe (event) {
   if(event.target.id === 'hit-button'){
     shuffleDeck(deck);
     dealToPlayer();
-    // if (playerScoreValue > 21) {
-    //   messageBox.innerText('Busted! Try again!')
-      if (dealerScoreCount.innerHTML <= 16){
+    if (playerScoreCount > 21) {
+      messageBox.innerText('Busted! Try again!')
+    } else if (dealerScoreCount.innerHTML <= 16){
         dealToDealer();
       }
   }
-  let dealerScoreValue = score(dealerScore);
-  dealerScoreCount.innerHTML = dealerScoreValue;
-  let playerScoreValue = score(playerScore);
-  playerScoreCount.innerHTML = playerScoreValue;
-  if (dealerScoreValue > 21){
-      messageBox.innerText = 'Dealer Bust! You win!'
-  } else if(playerScoreValue > 21){
-      messageBox.innerText = 'Busted! Try again!'
-  } else {
-      messageBox.innerText = "Who's next?";
-  }
+  displayScore();
+  checkScore(); 
 }
 
 function stand (event){
@@ -90,17 +82,29 @@ function stand (event){
       dealToDealer();
       let dealerScoreValue = score(dealerScore);
       dealerScoreCount.innerHTML = dealerScoreValue;
-      if (dealerScoreCount.innerHTML > 21){
-        messageBox.innerText = 'Dealer Bust! You win!'
-      } else if(dealerScoreCount.innerHTML == 21){
-          messageBox.innerText = 'The House wins!'
-      } else if ( playerScoreCount.innerHTML < dealerScoreCount.innerHTML) {
-          messageBox.innerText = 'The House wins!'
-      } else {
-          messageBox.innerText = 'Winner winner, chicken dinner!'
-      }
+      checkScore();
     }
   }  
+}
+
+function checkScore (){
+  if (playerScoreCount.innerHTML == 21){
+      messageBox.innerText = 'Blackjack! You win!'
+  } else if(dealerScoreCount.innerHTML == 21){
+      messageBox.innerText = 'Dealer Blackjack! Better luck next time!'
+  } else if(playerScoreCount.innerHTML > 21){
+      messageBox.innerText = 'Busted! Try again!'
+  } else if(dealerScoreCount.innerHTML > 21){
+      messageBox.innerText = 'Dealer bust! You Win!'
+  } else if( playerScoreCount.innerHTML == dealerScoreCount.innerHTML){
+      messageBox.innerText = 'Tie goes to noone. Next Hand!'
+  } else if( playerScoreCount.innerHTML < 21 && playerScoreCount.innerHTML > dealerScoreCount){
+      messageBox.innerText = 'Blackjack! You win!'
+  } else if(dealerScoreCount.innerHTML < 21 && dealerScoreCount.innerHTML > playerScoreCount) {
+      messageBox.innerText = 'The House wins!'
+  } else {
+      messageBox.innerText = "Who's next?"
+  }
 }
 
 function displayScore (){
